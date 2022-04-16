@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -27,7 +26,7 @@ namespace ImageStore.API.Controllers
         /// </summary>
         /// <param name="image"></param>
         [HttpPost]
-        public async Task<string> Post(IFormFile image)
+        public async Task<IActionResult> Post(IFormFile image)
         {
             _logger.LogInformation($"{DateTime.UtcNow},Image POST received.");
 
@@ -39,31 +38,50 @@ namespace ImageStore.API.Controllers
                 if (image == null || image.Length <= 0)
                 {
                     _logger.LogWarning($"File {image.FileName} has no content");
-                    return message;
+                    return new BadRequestObjectResult(message);
                 }
 
                 var filePath = Path.Combine(_environment.ContentRootPath, "images", image.FileName);
 
-                using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     await image.CopyToAsync(fileStream);
                 }
                 message = "Image uploaded: " + image.FileName;
                 _logger.LogInformation(message);
-                return message;
+                return Ok(message);
             }
             catch (Exception ex)
             {
                 message = "An error occurred";
                 _logger.LogError(ex, message);
-                return message;
+                return new BadRequestObjectResult(message);
             }
         }
 
         [HttpGet]
-        public IEnumerable<object> Get()
+        public IActionResult Get()
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"{DateTime.UtcNow},GET received for image data");
+            var nameParam = HttpContext.Request.Query["name"];
+
+            if (string.IsNullOrWhiteSpace(nameParam))
+            {
+                return new BadRequestObjectResult("Name param missing from query string.");
+            }
+            var imageName = nameParam.ToString();
+
+            try
+            {
+                var bytes = System.IO.File.ReadAllBytes(Path.Combine(_environment.ContentRootPath, "images", imageName + ".jpeg"));
+                return File(bytes, "image/jpeg");
+            }
+            catch (Exception ex)
+            {
+                var message = "An error occurred";
+                _logger.LogError(ex, message);
+                return new BadRequestObjectResult(message);
+            }
         }
     }
 }
