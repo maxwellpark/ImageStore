@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageStore.API", "ImageStore.API.csproj", "{BF77DD71-9ABA-41BD-B92D-2D6942D7406E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageStore", "ImageStore.csproj", "{BF77DD71-9ABA-41BD-B92D-2D6942D7406E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageStore.Data", "..\ImageStore.Data\ImageStore.Data.csproj", "{43E6261A-7DF3-4B33-9390-98CEA41EFDC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageStore.Services", "..\ImageStore.Services\ImageStore.Services.csproj", "{97905A38-8E7E-4DE6-ABE4-C1D1FDDBE4D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{BF77DD71-9ABA-41BD-B92D-2D6942D7406E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF77DD71-9ABA-41BD-B92D-2D6942D7406E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF77DD71-9ABA-41BD-B92D-2D6942D7406E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E6261A-7DF3-4B33-9390-98CEA41EFDC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E6261A-7DF3-4B33-9390-98CEA41EFDC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E6261A-7DF3-4B33-9390-98CEA41EFDC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E6261A-7DF3-4B33-9390-98CEA41EFDC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97905A38-8E7E-4DE6-ABE4-C1D1FDDBE4D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97905A38-8E7E-4DE6-ABE4-C1D1FDDBE4D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97905A38-8E7E-4DE6-ABE4-C1D1FDDBE4D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97905A38-8E7E-4DE6-ABE4-C1D1FDDBE4D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

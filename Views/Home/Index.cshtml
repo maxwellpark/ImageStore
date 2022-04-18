@@ -1,0 +1,15 @@
+﻿
+@model IEnumerable<string>
+@{
+    ViewData["Title"] = "Home";
+}
+<div>
+    <h3>Images</h3>
+    @{
+        foreach (var item in Model)
+        {
+            var src = "/Images/" + item;
+            <img src="@src" runat="server" />            
+        }
+    }
+</div>

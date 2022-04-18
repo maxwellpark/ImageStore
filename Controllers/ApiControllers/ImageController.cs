@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace ImageStore.API.Controllers
+namespace ImageStore.Controllers.ApiControllers
 {
     [ApiController]
     [Route("api/[controller]")]
