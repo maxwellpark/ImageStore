@@ -26,6 +26,7 @@ namespace ImageStore.Controllers.ApiControllers
         /// </summary>
         /// <param name="image"></param>
         [HttpPost]
+        [RequestFormLimits(ValueLengthLimit = int.MaxValue, ValueCountLimit = int.MaxValue)]
         public async Task<IActionResult> Post(IFormFile image)
         {
             _logger.LogInformation($"{DateTime.UtcNow},Image POST received.");

@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Home";
 }
-<div>
+<div class="container">
     <h3>Images</h3>
     @{
         foreach (var item in Model)
@@ -12,4 +12,13 @@
             <img src="@src" runat="server" />            
         }
     }
+</div>
+<div class="container">
+    <h3>Upload an image</h3>
+    <form id="upload-form">
+        <label for="file-input">Select an image:</label>
+        <input type="file" id="file-input" name="file" />
+        <button type="submit" class="btn btn-secondary">Upload</button>
+    </form>
+    <textarea id="file-contents"></textarea>
 </div>
