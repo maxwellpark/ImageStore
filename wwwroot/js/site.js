@@ -1,4 +1,4 @@
-﻿const imageUrl = "api/Image";
+﻿const requestUrl = "api/Image";
 const uploadForm = document.getElementById("upload-form");
 const fileInput = document.getElementById("file-input");
 const fileContentsHolder = document.getElementById("file-contents");
@@ -17,24 +17,18 @@ function uploadImage(event) {
         console.log("Error:", reader.error);
     }
     reader.onloadend = async function () {
-        //const response = await fetch("https://localhost:44385/api/Image", {
-        //    method: "POST",
-        //    headers: {
-        //        "Content-Type": "multipart/form-data; boundary=XXX"
-        //    },
-        //    body: reader.result
-        //});
-        //console.log("Response:", response);
+        const formData = new FormData(uploadForm);
 
-        fetch("https://localhost:44385/api/Image", {
+        await fetch(requestUrl, {
             method: "POST",
-            headers: {
-                "Content-Type": "multipart/form-data; boundary=XXX"
-            },
-            body: reader.result
-        })
-            .then(resp => console.log(resp))
-            .catch(err => console.log(err));
+            body: formData
+        }).then(resp => {
+            console.log(resp);
+        }).catch(err => {
+            console.log(err);
+        });
+
+        document.location.reload(true);
     }
 
     if (fileInput.files[0]) {

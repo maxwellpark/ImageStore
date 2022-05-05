@@ -36,19 +36,26 @@ namespace ImageStore.Controllers.ApiControllers
 
             try
             {
-                if (image == null || image.Length <= 0)
+                foreach (var file in HttpContext.Request.Form.Files)
                 {
-                    _logger.LogWarning($"File {image.FileName} has no content");
-                    return new BadRequestObjectResult(message);
+                    if (file == null || file.Length <= 0)
+                    {
+                        _logger.LogWarning($"File {file.FileName} has no content");
+                        return new BadRequestObjectResult(message);
+                    }
+
+                    var filePath = Path.Combine(_environment.ContentRootPath, "images", file.FileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+                    message = "Image uploaded: " + file.FileName;
+                    _logger.LogInformation(message);
                 }
 
-                var filePath = Path.Combine(_environment.ContentRootPath, "images", image.FileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await image.CopyToAsync(fileStream);
-                }
-                message = "Image uploaded: " + image.FileName;
+                message = "Upload successful";
                 _logger.LogInformation(message);
                 return Ok(message);
             }
