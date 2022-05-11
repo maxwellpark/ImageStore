@@ -17,5 +17,9 @@
     <ProjectReference Include="..\ImageStore.Data\ImageStore.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\Remote\" />
+  </ItemGroup>
+
 
 </Project>

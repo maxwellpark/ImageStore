@@ -44,7 +44,7 @@ namespace ImageStore.Controllers.ApiControllers
                         return new BadRequestObjectResult(message);
                     }
 
-                    var filePath = Path.Combine(_environment.ContentRootPath, "images", file.FileName);
+                    var filePath = Path.Combine(_environment.ContentRootPath, "Images", file.FileName);
 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
@@ -81,7 +81,7 @@ namespace ImageStore.Controllers.ApiControllers
 
             try
             {
-                var bytes = System.IO.File.ReadAllBytes(Path.Combine(_environment.ContentRootPath, "images", imageName + ".jpeg"));
+                var bytes = System.IO.File.ReadAllBytes(Path.Combine(_environment.ContentRootPath, "Images", imageName + ".jpeg"));
                 return File(bytes, "image/jpeg");
             }
             catch (Exception ex)
