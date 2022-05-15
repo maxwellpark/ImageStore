@@ -31,7 +31,6 @@ namespace ImageStore.Controllers.ApiControllers
         {
             _logger.LogInformation($"{DateTime.UtcNow},Image POST received.");
 
-            var contextFiles = HttpContext.Request.Form.Files;
             var message = string.Empty;
 
             try

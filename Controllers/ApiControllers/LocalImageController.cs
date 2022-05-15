@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -13,22 +12,20 @@ namespace ImageStore.Controllers.ApiControllers
     public class LocalImageController : ControllerBase
     {
         private readonly HttpClient _httpClient;
-        private readonly ILogger<LocalImageController> _logger;
         private readonly IWebHostEnvironment _environment;
 
-        public LocalImageController(IHttpClientFactory factory, ILogger<LocalImageController> logger, IWebHostEnvironment environment)
+        public LocalImageController(IHttpClientFactory factory, IWebHostEnvironment environment)
         {
             _httpClient = factory.CreateClient();
-            _logger = logger;
             _environment = environment;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(/*string fileName*/)
+        [Route("{fileName}")]
+        public async Task<IActionResult> Get(string fileName)
         {
             try
             {
-                var fileName = HttpContext.Request.Query["fileName"];
                 var bytes = System.IO.File.ReadAllBytes(Path.Combine(_environment.ContentRootPath, "Images", "Local", fileName));
 
                 var multipartFormData = new MultipartFormDataContent();
