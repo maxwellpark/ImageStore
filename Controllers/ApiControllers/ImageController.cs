@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using ImageStore.Data.Models;
+using ImageStore.Data.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,11 +15,13 @@ namespace ImageStore.Controllers.ApiControllers
     public class ImageController : ControllerBase
     {
         private readonly ILogger<ImageController> _logger;
+        private readonly IImageRepository _imageRepository;
         private readonly IWebHostEnvironment _environment;
 
-        public ImageController(ILogger<ImageController> logger, IWebHostEnvironment environment)
+        public ImageController(ILogger<ImageController> logger, IImageRepository imageRepository, IWebHostEnvironment environment)
         {
             _logger = logger;
+            _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
             _environment = environment;
         }
 
@@ -30,7 +34,6 @@ namespace ImageStore.Controllers.ApiControllers
         public async Task<IActionResult> Post(IFormFile image)
         {
             _logger.LogInformation($"{DateTime.UtcNow},Image POST received.");
-
             var message = string.Empty;
 
             try
@@ -49,6 +52,9 @@ namespace ImageStore.Controllers.ApiControllers
                     {
                         await file.CopyToAsync(fileStream);
                     }
+
+                    var imageData = new Image(file.FileName, filePath, "", "");
+                    await _imageRepository.AddImageAsync(imageData);
 
                     message = "Image uploaded: " + file.FileName;
                     _logger.LogInformation(message);

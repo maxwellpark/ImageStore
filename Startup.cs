@@ -1,6 +1,9 @@
+using ImageStore.Data.DbContexts;
+using ImageStore.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -12,13 +15,12 @@ namespace ImageStore
     public class Startup
     {
         private readonly string _corsPolicyName = "DefaultCorsPolicy";
+        private readonly IConfiguration _config;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            _config = config;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -52,6 +54,15 @@ namespace ImageStore
             {
                 options.MaxModelBindingCollectionSize = int.MaxValue;
             });
+
+            var connectionString =
+
+            // EF services 
+            services.AddDbContext<ImageContext>(options =>
+            {
+                options.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+            });
+            services.AddScoped<IImageRepository, ImageRepository>();
 
             services.AddHttpClient();
             services.AddMemoryCache();
