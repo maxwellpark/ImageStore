@@ -19,5 +19,11 @@ namespace ImageStore.Data.Models
             Message = message;
             CreationDate = creationDate;
         }
+
+        public ImageUploadResult(string type, string message)
+        {
+            Type = type;
+            Message = message;
+        }
     }
 }

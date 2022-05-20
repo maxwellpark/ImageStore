@@ -2,6 +2,7 @@
 const uploadForm = document.getElementById("upload-form");
 const fileInput = document.getElementById("file-input");
 const fileContentsHolder = document.getElementById("file-contents");
+const captionInput = document.getElementById("caption-input");
 
 if (uploadForm) {
     uploadForm.addEventListener("submit", uploadImage);
@@ -18,6 +19,7 @@ function uploadImage(event) {
     }
     reader.onloadend = async function () {
         const formData = new FormData(uploadForm);
+        formData.append("caption", captionInput.value);
 
         await fetch(requestUrl, {
             method: "POST",
@@ -27,7 +29,6 @@ function uploadImage(event) {
         }).catch(err => {
             console.log(err);
         });
-
         document.location.reload(true);
     }
 

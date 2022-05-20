@@ -32,7 +32,7 @@ namespace ImageStore.Controllers.ApiControllers
         [HttpPost]
         [Consumes("multipart/form-data")]
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, ValueCountLimit = int.MaxValue)]
-        public async Task<IActionResult> Post(IFormCollection data)
+        public async Task<IActionResult> Post(IFormCollection formData)
         {
             _logger.LogInformation($"{DateTime.UtcNow},Image POST received.");
             var message = string.Empty;
@@ -40,8 +40,8 @@ namespace ImageStore.Controllers.ApiControllers
             try
             {
                 // Image metadata from body 
-                var imageName = data["name"];
-                var imageCaption = data["caption"];
+                var imageName = formData["name"];
+                var imageCaption = formData["caption"];
                 var creationDate = DateTime.Now.ToString("dd/MM/yyyy");
 
                 foreach (var file in HttpContext.Request.Form.Files)
@@ -49,12 +49,12 @@ namespace ImageStore.Controllers.ApiControllers
                     if (file == null || file.Length <= 0)
                     {
                         _logger.LogWarning($"File {file.FileName} has no content");
-                        return new BadRequestObjectResult(message);
+                        return new BadRequestObjectResult(new ImageUploadResult("failure", message));
                     }
 
                     var filePath = Path.Combine(_environment.ContentRootPath, "Images", file.FileName);
 
-                    // Todo: Rollback write operation if exception thrown in EF 
+                    // Todo: Rollback IO operation if exception thrown in EF 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
@@ -75,7 +75,7 @@ namespace ImageStore.Controllers.ApiControllers
             {
                 message = "An error occurred";
                 _logger.LogError(ex, message);
-                return new BadRequestObjectResult(new ImageUploadResult("failure", message, null));
+                return new BadRequestObjectResult(new ImageUploadResult("failure", message));
             }
         }
 
