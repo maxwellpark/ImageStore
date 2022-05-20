@@ -1,15 +1,27 @@
-﻿
-@model IEnumerable<string>
+﻿@using ImageStore.Data.Models
+
+@model IEnumerable<Image>
 @{
     ViewData["Title"] = "Home";
 }
 <div id="stored-images-container" class="container">
     <h3>Images</h3>
     @{
-        foreach (var path in Model)
+        foreach (var image in Model)
         {
-            var src = "/Images/" + path;
-            <img class="stored-image" src="@src" alt="Stored image" runat="server" />            
+            // Get relative path to file
+            var index = @image.FilePath.IndexOf("Images\\");
+            <text>
+                @if (index < 0)
+                {
+                    continue;
+                }
+            </text>
+            var src = @image.FilePath.Substring(index, @image.FilePath.Length - index)?.Replace("\\", "/");
+            <div class="stored-image-container">
+                <img class="stored-image" src="@src" alt="Stored image" runat="server" />
+                <span class="image-caption">@image.Caption</span>
+            </div>
         }
     }
 </div>

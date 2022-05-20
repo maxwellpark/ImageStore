@@ -54,6 +54,7 @@ namespace ImageStore.Controllers.ApiControllers
 
                     var filePath = Path.Combine(_environment.ContentRootPath, "Images", file.FileName);
 
+                    // Todo: Rollback write operation if exception thrown in EF 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
@@ -68,13 +69,13 @@ namespace ImageStore.Controllers.ApiControllers
 
                 message = "Upload successful";
                 _logger.LogInformation(message);
-                return Ok(new ImageUploadResult(message, creationDate));
+                return Ok(new ImageUploadResult("success", message, creationDate));
             }
             catch (Exception ex)
             {
                 message = "An error occurred";
                 _logger.LogError(ex, message);
-                return new BadRequestObjectResult(message);
+                return new BadRequestObjectResult(new ImageUploadResult("failure", message, null));
             }
         }
 

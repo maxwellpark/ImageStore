@@ -3,6 +3,8 @@
 }
 
 body {
+    width: 100vw;
+    height: 100vh;
     background-color: lightblue;
 }
 
@@ -10,8 +12,21 @@ body {
     display: none;
 }
 
-.stored-image {
+img.stored-image {
     width: 250px;
     height: 250px;
     object-fit: fill;
+    padding-bottom: 0.5rem;
+}
+
+div.stored-image-container {
+    width: 275px;
+    height: 275px;
+    font-size: 80%;
+    text-align: center;
+    vertical-align: top;
+}
+
+span.image-caption {
+    display: block;
 }

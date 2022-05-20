@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using ImageStore.Data.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileSystemGlobbing;
@@ -14,23 +15,25 @@ namespace ImageStore.Controllers.MvcControllers
     {
         private readonly IWebHostEnvironment _environment;
         private readonly IMemoryCache _memoryCache;
+        private readonly IImageRepository _imageRepository;
         private readonly TimeSpan _cacheExpirationTime = TimeSpan.FromMinutes(10);
 
         private readonly string _imageFilePathsKey = "imageFilePaths";
         private readonly string _imageDirectory;
         private readonly string[] _includePatterns = new[] { "*.jpg", "*.jpeg" };
 
-        public HomeController(IWebHostEnvironment environment, IMemoryCache memoryCache)
+        public HomeController(IWebHostEnvironment environment, IMemoryCache memoryCache, IImageRepository imageRepository)
         {
             _environment = environment;
             _memoryCache = memoryCache;
+            _imageRepository = imageRepository ?? throw new ArgumentNullException(nameof(imageRepository));
             _imageDirectory = Path.Combine(_environment.ContentRootPath, "Images");
         }
 
         public IActionResult Index()
         {
-            var filePaths = GetImageFilePaths();
-            return View(filePaths);
+            var images = _imageRepository.GetImages();
+            return View(images);
         }
 
         private List<string> GetImageFilePaths()
