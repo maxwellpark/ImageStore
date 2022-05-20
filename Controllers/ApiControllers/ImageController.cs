@@ -34,7 +34,7 @@ namespace ImageStore.Controllers.ApiControllers
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, ValueCountLimit = int.MaxValue)]
         public async Task<IActionResult> Post(IFormCollection formData)
         {
-            _logger.LogInformation($"{DateTime.UtcNow},Image POST received.");
+            _logger.LogInformation(string.Format("{0},Image POST received.", DateTime.UtcNow.ToString()));
             var message = string.Empty;
 
             try
@@ -48,11 +48,12 @@ namespace ImageStore.Controllers.ApiControllers
                 {
                     if (file == null || file.Length <= 0)
                     {
-                        _logger.LogWarning($"File {file.FileName} has no content");
+                        _logger.LogWarning(string.Format("File with name '{0}' has no content", file.FileName));
                         return new BadRequestObjectResult(new ImageUploadResult("failure", message));
                     }
 
                     var filePath = Path.Combine(_environment.ContentRootPath, "Images", file.FileName);
+                    _logger.LogInformation("New file path: " + filePath);
 
                     // Todo: Rollback IO operation if exception thrown in EF 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -61,7 +62,18 @@ namespace ImageStore.Controllers.ApiControllers
                     }
 
                     var imageData = new Image(imageName, filePath, imageCaption, creationDate);
-                    await _imageRepository.AddImageAsync(imageData);
+
+                    try
+                    {
+                        await _imageRepository.AddImageAsync(imageData);
+                    }
+                    catch (Exception)
+                    {
+                        // Rollback IO operation if exception thrown in EF 
+                        _logger.LogInformation("Deleting file because an error occurred when writing to the database");
+                        System.IO.File.Delete(filePath);
+                        throw;
+                    }
 
                     message = "Image uploaded: " + file.FileName;
                     _logger.LogInformation(message);
@@ -82,7 +94,7 @@ namespace ImageStore.Controllers.ApiControllers
         [HttpGet]
         public IActionResult Get()
         {
-            _logger.LogInformation($"{DateTime.UtcNow},GET received for image data");
+            _logger.LogInformation(string.Format("{0},GET received for image data", DateTime.UtcNow.ToString()));
             var nameParam = HttpContext.Request.Query["name"];
 
             if (string.IsNullOrWhiteSpace(nameParam))
