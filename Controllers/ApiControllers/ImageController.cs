@@ -30,14 +30,19 @@ namespace ImageStore.Controllers.ApiControllers
         /// </summary>
         /// <param name="image"></param>
         [HttpPost]
+        [Consumes("multipart/form-data")]
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, ValueCountLimit = int.MaxValue)]
-        public async Task<IActionResult> Post(IFormFile image)
+        public async Task<IActionResult> Post(IFormCollection data)
         {
             _logger.LogInformation($"{DateTime.UtcNow},Image POST received.");
             var message = string.Empty;
 
             try
             {
+                var imageName = data["name"];
+                var imageCaption = data["caption"];
+                var creationDate = DateTime.Now.ToString("dd/MM/yyyy");
+
                 foreach (var file in HttpContext.Request.Form.Files)
                 {
                     if (file == null || file.Length <= 0)
@@ -53,7 +58,7 @@ namespace ImageStore.Controllers.ApiControllers
                         await file.CopyToAsync(fileStream);
                     }
 
-                    var imageData = new Image(file.FileName, filePath, "", "");
+                    var imageData = new Image(imageName, filePath, imageCaption, creationDate);
                     await _imageRepository.AddImageAsync(imageData);
 
                     message = "Image uploaded: " + file.FileName;
