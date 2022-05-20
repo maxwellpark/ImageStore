@@ -39,6 +39,7 @@ namespace ImageStore.Controllers.ApiControllers
 
             try
             {
+                // Image metadata from body 
                 var imageName = data["name"];
                 var imageCaption = data["caption"];
                 var creationDate = DateTime.Now.ToString("dd/MM/yyyy");
@@ -67,7 +68,7 @@ namespace ImageStore.Controllers.ApiControllers
 
                 message = "Upload successful";
                 _logger.LogInformation(message);
-                return Ok(message);
+                return Ok(new ImageUploadResult(message, creationDate));
             }
             catch (Exception ex)
             {
