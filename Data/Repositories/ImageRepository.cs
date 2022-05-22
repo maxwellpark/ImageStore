@@ -26,6 +26,23 @@ namespace ImageStore.Data.Repositories
             return images;
         }
 
+        public Image GetImageById(int id)
+        {
+            _logger.LogInformation("Getting image by ID " + id + "...");
+
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException("Image ID is less than the minimum value.");
+            }
+            var image = _context.Images.FirstOrDefault(image => image.Id == id);
+            
+            if (image == null)
+            {
+                throw new Exception("Image with ID " + id + " could not be found");
+            }
+            return image;
+        }
+
         public async Task<bool> AddImageAsync(Image image)
         {
             _context.Add(image);

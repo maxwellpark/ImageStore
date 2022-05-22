@@ -7,6 +7,7 @@ namespace ImageStore.Data.Repositories
     public interface IImageRepository
     {
         Task<bool> AddImageAsync(Image image);
+        Image GetImageById(int id);
         IEnumerable<Image> GetImages();
     }
 }

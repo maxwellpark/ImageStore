@@ -34,7 +34,7 @@ namespace ImageStore.Controllers.ApiControllers
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, ValueCountLimit = int.MaxValue)]
         public async Task<IActionResult> Post(IFormCollection formData)
         {
-            _logger.LogInformation(string.Format("{0},Image POST received.", DateTime.UtcNow.ToString()));
+            _logger.LogInformation("Image POST received.");
             var message = string.Empty;
 
             try
@@ -55,7 +55,6 @@ namespace ImageStore.Controllers.ApiControllers
                     var filePath = Path.Combine(_environment.ContentRootPath, "Images", file.FileName);
                     _logger.LogInformation("New file path: " + filePath);
 
-                    // Todo: Rollback IO operation if exception thrown in EF 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
@@ -70,7 +69,7 @@ namespace ImageStore.Controllers.ApiControllers
                     catch (Exception)
                     {
                         // Rollback IO operation if exception thrown in EF 
-                        _logger.LogInformation("Deleting file because an error occurred when writing to the database");
+                        _logger.LogError("Deleting file because an error occurred when writing to the database");
                         System.IO.File.Delete(filePath);
                         throw;
                     }
@@ -94,7 +93,7 @@ namespace ImageStore.Controllers.ApiControllers
         [HttpGet]
         public IActionResult Get()
         {
-            _logger.LogInformation(string.Format("{0},GET received for image data", DateTime.UtcNow.ToString()));
+            _logger.LogInformation("GET received for image data");
             var nameParam = HttpContext.Request.Query["name"];
 
             if (string.IsNullOrWhiteSpace(nameParam))
@@ -107,6 +106,25 @@ namespace ImageStore.Controllers.ApiControllers
             {
                 var bytes = System.IO.File.ReadAllBytes(Path.Combine(_environment.ContentRootPath, "Images", imageName + ".jpeg"));
                 return File(bytes, "image/jpeg");
+            }
+            catch (Exception ex)
+            {
+                var message = "An error occurred";
+                _logger.LogError(ex, message);
+                return new BadRequestObjectResult(message);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetById(int id)
+        {
+            _logger.LogInformation("GET received for image by ID " + id);
+
+            try
+            {
+                var image = _imageRepository.GetImageById(id);
+                return new OkObjectResult(image);
             }
             catch (Exception ex)
             {
