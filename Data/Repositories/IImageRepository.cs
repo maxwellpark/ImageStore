@@ -9,5 +9,6 @@ namespace ImageStore.Data.Repositories
         Task<bool> AddImageAsync(Image image);
         Image GetImageById(int id);
         IEnumerable<Image> GetImages();
+        Task<bool> UpdateCaptionAsync(int id, string value);
     }
 }

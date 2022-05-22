@@ -133,5 +133,33 @@ namespace ImageStore.Controllers.ApiControllers
                 return new BadRequestObjectResult(message);
             }
         }
+
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<IActionResult> Patch(int id)
+        {
+            _logger.LogInformation("PATCH received for image data by ID " + id);
+            var captionParam = HttpContext.Request.Query["caption"];
+
+            if (string.IsNullOrWhiteSpace(captionParam))
+            {
+                return new BadRequestObjectResult("Caption param missing from query string.");
+            }
+
+            try
+            {
+                if (await _imageRepository.UpdateCaptionAsync(id, captionParam))
+                {
+                    return new OkObjectResult("Caption updated successfully");
+                }
+                return new BadRequestObjectResult("Failed to update caption");
+            }
+            catch (Exception ex)
+            {
+                var message = "An error occurred";
+                _logger.LogError(ex, message);
+                return new BadRequestObjectResult(message);
+            }
+        }
     }
 }
