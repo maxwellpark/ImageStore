@@ -136,7 +136,7 @@ namespace ImageStore.Controllers.ApiControllers
 
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> Patch(int id)
+        public async Task<IActionResult> UpdateCaption(int id)
         {
             _logger.LogInformation("PATCH received for image data by ID " + id);
             var captionParam = HttpContext.Request.Query["caption"];

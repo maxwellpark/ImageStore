@@ -18,9 +18,10 @@
                 }
             </text>
             var src = @image.FilePath.Substring(index, @image.FilePath.Length - index)?.Replace("\\", "/");
-            <div class="stored-image-container">
+            <div class="stored-image-container" data-image-id="@image.Id">
                 <img class="stored-image" src="@src" alt="Stored image" runat="server" />
                 <span class="image-caption">@image.Caption</span>
+                <i class="fa fa-lg fa-trash delete-icon" aria-hidden="true"></i>
             </div>
         }
     }
