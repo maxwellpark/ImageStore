@@ -62,5 +62,14 @@ namespace ImageStore.Data.Repositories
             var changeCount = await _context.SaveChangesAsync();
             return changeCount > 0;
         }
+
+        public async Task<bool> DeleteImageByIdAsync(int id)
+        {
+            var image = GetImageById(id);
+            _context.Remove(image);
+
+            var changeCount = await _context.SaveChangesAsync();
+            return changeCount > 0;
+        }
     }
 }

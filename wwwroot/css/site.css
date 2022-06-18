@@ -25,8 +25,14 @@ div.stored-image-container {
     font-size: 80%;
     text-align: center;
     vertical-align: top;
+    margin: 2rem;
 }
 
 span.image-caption {
     display: block;
+}
+
+i.delete-icon {
+    display: inline;
+    cursor: pointer;
 }

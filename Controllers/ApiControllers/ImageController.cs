@@ -32,7 +32,7 @@ namespace ImageStore.Controllers.ApiControllers
         [HttpPost]
         [Consumes("multipart/form-data")]
         [RequestFormLimits(ValueLengthLimit = int.MaxValue, ValueCountLimit = int.MaxValue)]
-        public async Task<IActionResult> Post(IFormCollection formData)
+        public async Task<IActionResult> UploadImage(IFormCollection formData)
         {
             _logger.LogInformation("Image POST received.");
             var message = string.Empty;
@@ -84,14 +84,14 @@ namespace ImageStore.Controllers.ApiControllers
             }
             catch (Exception ex)
             {
-                message = "An error occurred";
+                message = "An unexpected error occurred";
                 _logger.LogError(ex, message);
                 return new BadRequestObjectResult(new ImageUploadResult("failure", message));
             }
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetImage()
         {
             _logger.LogInformation("GET received for image data");
             var nameParam = HttpContext.Request.Query["name"];
@@ -109,7 +109,7 @@ namespace ImageStore.Controllers.ApiControllers
             }
             catch (Exception ex)
             {
-                var message = "An error occurred";
+                var message = "An unexpected error occurred";
                 _logger.LogError(ex, message);
                 return new BadRequestObjectResult(message);
             }
@@ -117,7 +117,7 @@ namespace ImageStore.Controllers.ApiControllers
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetImage(int id)
         {
             _logger.LogInformation("GET received for image by ID " + id);
 
@@ -128,7 +128,7 @@ namespace ImageStore.Controllers.ApiControllers
             }
             catch (Exception ex)
             {
-                var message = "An error occurred";
+                var message = "An unexpected error occurred";
                 _logger.LogError(ex, message);
                 return new BadRequestObjectResult(message);
             }
@@ -136,7 +136,7 @@ namespace ImageStore.Controllers.ApiControllers
 
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> Patch(int id)
+        public async Task<IActionResult> UpdateCaption(int id)
         {
             _logger.LogInformation("PATCH received for image data by ID " + id);
             var captionParam = HttpContext.Request.Query["caption"];
@@ -156,7 +156,29 @@ namespace ImageStore.Controllers.ApiControllers
             }
             catch (Exception ex)
             {
-                var message = "An error occurred";
+                var message = "An unexpected error occurred";
+                _logger.LogError(ex, message);
+                return new BadRequestObjectResult(message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            _logger.LogInformation("DELETE received for image data by ID " + id);
+
+            try
+            {
+                if (await _imageRepository.DeleteImageByIdAsync(id))
+                {
+                    return new OkObjectResult("Image deleted updated successfully");
+                }
+                return new BadRequestObjectResult("Failed to delete image");
+            }
+            catch (Exception ex)
+            {
+                var message = "An unexpected error occurred";
                 _logger.LogError(ex, message);
                 return new BadRequestObjectResult(message);
             }
