@@ -43,6 +43,7 @@ namespace ImageStore.Controllers.ApiControllers
                 var imageName = formData["name"];
                 var imageCaption = formData["caption"];
                 var creationDate = DateTime.Now.ToString("dd/MM/yyyy");
+                var tags = formData["tags"];
 
                 foreach (var file in HttpContext.Request.Form.Files)
                 {
@@ -60,11 +61,11 @@ namespace ImageStore.Controllers.ApiControllers
                         await file.CopyToAsync(fileStream);
                     }
 
-                    var imageData = new Image(imageName, filePath, imageCaption, creationDate);
+                    var image = new Image(imageName, filePath, imageCaption, creationDate, tags);
 
                     try
                     {
-                        await _imageRepository.AddImageAsync(imageData);
+                        await _imageRepository.AddImageAsync(image);
                     }
                     catch (Exception)
                     {

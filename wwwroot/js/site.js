@@ -4,7 +4,7 @@ const fileInput = document.getElementById("file-input");
 const fileContentsHolder = document.getElementById("file-contents");
 const captionInput = document.getElementById("caption-input");
 const tagInput = document.getElementById("tag-input");
-const tagsDisplay = document.getElementById("tags-display");
+const tagsCapture = document.getElementById("tags-capture");
 const addTagButton = document.getElementById("add-tag-button");
 
 if (uploadForm) {
@@ -30,7 +30,7 @@ function uploadImage(event) {
     reader.onloadend = async function () {
         const formData = new FormData(uploadForm);
         formData.append("caption", captionInput.value);
-        formData.append("")
+        formData.append("tags", tagsCapture.innerText);
 
         await fetch(requestUrl, {
             method: "POST",
@@ -73,10 +73,10 @@ function addTag() {
         return;
     }
     let tag = "";
-    if (tagsDisplay.innerText != "") {
+    if (tagsCapture.innerText != "") {
         tag += ",";
     }
     tag += tagInput.value;
-    tagsDisplay.innerText += tag;
+    tagsCapture.innerText += tag;
     tagInput.value = "";
 }
