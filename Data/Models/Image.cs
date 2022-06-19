@@ -7,11 +7,9 @@
         public string FilePath { get; set; }
         public string Caption { get; set; }
         public string CreationDate { get; set; }
+        public string Tags { get; set; }
 
-        public Image()
-        {
-
-        }
+        public Image() { }
 
         public Image(string name, string filePath, string caption, string creationDate)
         {
@@ -19,6 +17,15 @@
             FilePath = filePath;
             Caption = caption;
             CreationDate = creationDate;
+        }
+
+        public Image(string name, string filePath, string caption, string creationDate, string tags)
+        {
+            Name = name;
+            FilePath = filePath;
+            Caption = caption;
+            CreationDate = creationDate;
+            Tags = tags;
         }
     }
 }

@@ -3,9 +3,17 @@ const uploadForm = document.getElementById("upload-form");
 const fileInput = document.getElementById("file-input");
 const fileContentsHolder = document.getElementById("file-contents");
 const captionInput = document.getElementById("caption-input");
+const tagInput = document.getElementById("tag-input");
+const tagsDisplay = document.getElementById("tags-display");
+const addTagButton = document.getElementById("add-tag-button");
 
 if (uploadForm) {
     uploadForm.addEventListener("submit", uploadImage);
+}
+
+addTagButton.onclick = function (event) {
+    event.preventDefault();
+    addTag();
 }
 
 addDeleteListeners();
@@ -22,6 +30,7 @@ function uploadImage(event) {
     reader.onloadend = async function () {
         const formData = new FormData(uploadForm);
         formData.append("caption", captionInput.value);
+        formData.append("")
 
         await fetch(requestUrl, {
             method: "POST",
@@ -57,4 +66,17 @@ function addDeleteListeners() {
             document.location.reload(true);
         }
     }
+}
+
+function addTag() {
+    if (!tagInput.value) {
+        return;
+    }
+    let tag = "";
+    if (tagsDisplay.innerText != "") {
+        tag += ",";
+    }
+    tag += tagInput.value;
+    tagsDisplay.innerText += tag;
+    tagInput.value = "";
 }
