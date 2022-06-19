@@ -24,5 +24,10 @@ namespace ImageStore.Data.DbContexts
             var connectionString = config.GetConnectionString("DefaultConnection");
             options.UseSqlServer(connectionString);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
